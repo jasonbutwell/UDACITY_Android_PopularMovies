@@ -14,21 +14,22 @@ public final class JSONUtils {
 
     private JSONUtils() {}
 
-    public static ArrayList<String> extractFromJSONArray(String JSONData, String JSONObjectFieldName) throws JSONException {
+    public static ArrayList<String> extractFromJSONArray( String JSONData, String JSONObjectFieldName ) throws JSONException {
 
-        ArrayList<String> movie_posters = new ArrayList<>();
+        ArrayList<String> field_data = new ArrayList<>();
 
         String JSONArray_start = "results";
 
-        JSONObject movieData = new JSONObject(JSONData);
-        JSONArray movieDataArray = movieData.getJSONArray(JSONArray_start);
+        JSONObject movieData = new JSONObject( JSONData );
+        JSONArray movieDataArray = movieData.getJSONArray( JSONArray_start );
 
-        for (int i=0; i< movieDataArray.length(); i++ ) {
-            JSONObject movieItem = movieDataArray.getJSONObject(i);
+        for ( int i=0; i< movieDataArray.length(); i++ ) {
+            JSONObject movieItem = movieDataArray.getJSONObject( i );
 
-            String poster_path = movieItem.getString(JSONObjectFieldName);
-            movie_posters.add(poster_path);
+            String JSONdataItem = movieItem.getString( JSONObjectFieldName );
+
+            field_data.add( JSONdataItem );
         }
-        return movie_posters;
+        return field_data;
     }
 }

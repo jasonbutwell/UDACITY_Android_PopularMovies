@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.GridView;
 import android.widget.TextView;
 
 import org.json.JSONException;
@@ -17,8 +18,12 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
+    private MovieAdapter adapter;
+    //private GridView gridView;
     private TextView testTV;
     private FrameLayout loadingIndicator;
+
+    private ArrayList<String> movie_posters;
 
     private void showSortBy() {
         testTV.setText(TMDBHelper.getFilterQueryString());
@@ -39,20 +44,28 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        loadingIndicator = (FrameLayout)findViewById(R.id.loadingIndicator);
-
         // Replace here or in APIKey.java with your own 'TMDB API KEY'
         TMDBHelper.setApiKey( APIKey.get() );
 
-        testTV = (TextView) findViewById(R.id.test);
+        movie_posters = new ArrayList<>();
+
+        GridView gridView = (GridView) findViewById(R.id.gridView);
+        loadingIndicator = (FrameLayout)findViewById(R.id.loadingIndicator);
+
+        adapter = new MovieAdapter(this, movie_posters);
+        gridView.setAdapter(adapter);
 
         TMDBHelper.setSortByText(TMDBHelper.POPULAR);
-
         loadMovieData();
     }
 
+    private void updateMovies(ArrayList<String> movieposters) {
+        movie_posters = movieposters;
+        adapter.notifyDataSetChanged();
+    }
+
     private void loadMovieData() {
-        new TMDBQueryTask().execute(TMDBHelper.buildBaseURL());
+        new TMDBQueryTask().execute( TMDBHelper.buildBaseURL() );
     }
 
     // Create our options menu so we can filter the movies by
@@ -91,7 +104,6 @@ public class MainActivity extends AppCompatActivity {
 
         URL UrlToSearch = null;
         String searchResults = null;
-        String movie_posters[];
 
         @Override
         protected void onPreExecute() {
@@ -104,8 +116,6 @@ public class MainActivity extends AppCompatActivity {
         protected ArrayList<String> doInBackground(URL... urls) {
             URL searchURL = null;
             searchURL = urls[0];
-
-            ArrayList<String> movie_posters = null;
 
             try {
                 searchResults = NetworkUtils.getResponseFromHttpUrl( searchURL );
@@ -127,12 +137,7 @@ public class MainActivity extends AppCompatActivity {
             //super.onPostExecute(s);
             // Loading indicator invisible
             showLoadingIndicator( false );
-
-            testTV.setText(searchResults);
-
-            for ( String movie_poster_name : movie_posters) {
-                testTV.append(TMDBHelper.buildImageURL(movie_poster_name) + "\n");
-            }
+            updateMovies(movie_posters);
         }
     }
 }
