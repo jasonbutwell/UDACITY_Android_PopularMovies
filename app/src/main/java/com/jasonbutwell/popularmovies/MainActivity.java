@@ -9,8 +9,11 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import org.json.JSONException;
+
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -84,10 +87,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public class TMDBQueryTask extends AsyncTask<URL, Void, String> {
+    public class TMDBQueryTask extends AsyncTask<URL, Void, ArrayList<String>> {
 
         URL UrlToSearch = null;
         String searchResults = null;
+        String movie_posters[];
 
         @Override
         protected void onPreExecute() {
@@ -97,23 +101,38 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        protected String doInBackground(URL... urls) {
-            URL searchURL = urls[0];
+        protected ArrayList<String> doInBackground(URL... urls) {
+            URL searchURL = null;
+            searchURL = urls[0];
+
+            ArrayList<String> movie_posters = null;
 
             try {
                 searchResults = NetworkUtils.getResponseFromHttpUrl( searchURL );
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            return searchResults;
+
+            try {
+               movie_posters = JSONUtils.extractFromJSONArray(searchResults);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            return movie_posters;
         }
 
         @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
+        protected void onPostExecute(ArrayList<String> movie_posters) {
+            //super.onPostExecute(s);
             // Loading indicator invisible
             showLoadingIndicator( false );
+
             testTV.setText(searchResults);
+
+            for ( String movie_poster : movie_posters) {
+                testTV.append(movie_poster + "\n");
+            }
         }
     }
 }
