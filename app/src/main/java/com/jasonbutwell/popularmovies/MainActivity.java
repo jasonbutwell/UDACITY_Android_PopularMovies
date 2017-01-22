@@ -8,9 +8,6 @@ import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
-    // Replace here with your own TMDB API KEY
-    private final static String TMDB_API_KEY = APIKey.get();
-
     private TextView testTV;
 
     private void showSortBy() {
@@ -22,10 +19,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Replace here or in APIKey.java with your own 'TMDB API KEY'
+        TMDBHelper.setApiKey( APIKey.get() );
+
         testTV = (TextView) findViewById(R.id.test);
 
         TMDBHelper.setSortByText(TMDBHelper.POPULAR);
-        showSortBy();
+
+        testTV.setText(TMDBHelper.buildBaseURL());
     }
 
     // Create our options menu so we can filter the movies by
@@ -47,17 +48,16 @@ public class MainActivity extends AppCompatActivity {
 
             case R.id.sortby_popular :
                 TMDBHelper.setSortByText(TMDBHelper.POPULAR);
-                showSortBy();
+                testTV.setText(TMDBHelper.buildBaseURL());
                 return true;
 
             case R.id.sortby_top_rated :
                 TMDBHelper.setSortByText(TMDBHelper.TOP_RATED);
-                showSortBy();
+                testTV.setText(TMDBHelper.buildBaseURL());
                 return true;
 
             default:
                 return super.onOptionsItemSelected(item);
-
         }
     }
 }

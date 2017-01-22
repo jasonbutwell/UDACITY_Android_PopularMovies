@@ -1,32 +1,95 @@
 package com.jasonbutwell.popularmovies;
 
+import android.net.Uri;
+
+import java.net.MalformedURLException;
+import java.net.URL;
+
 /**
  * Created by J on 21/01/2017.
  */
 
-public final class TMDBHelper {
-    // Private constructor
-    private TMDBHelper() {}
+ final class TMDBHelper {
+    private TMDBHelper() {}     // Private constructor
 
-    public static final int POPULAR=0, TOP_RATED=1;
-    private static int sortByFilter = POPULAR;
+    private static String API_KEY;
 
+    private static final String BASE_URL = "http://api.themoviedb.org/3/movie/";
+    private static final String BASE_IMAGE_URL = "http://image.tmdb.org/t/p/";
+
+    private static final String PARAM_API_KEY = "api_key";
+    private static final String PARAM_PAGE = "page";
+
+    private static final String IMAGE_SIZE = "w185";
+
+    static final int POPULAR = 0, TOP_RATED = 1;
     private static final String[] queryFilters = { "popular", "top_rated" };
-    private static String filterQuery = "";
+    private static String filterQuery = queryFilters[POPULAR];
+    private static int page_number = 1;
 
-    public static String getFilterQueryString() {
+    // Quick way to build an Image URL to fetch image extracted from JSON
+    static String buildImageURL(String imageName) {
+        return (BASE_IMAGE_URL+IMAGE_SIZE+imageName);
+    }
+
+    // Builds the base URL to retrieve the JSON
+    static String buildBaseURL() {
+        Uri.Builder buildUri = Uri.parse(BASE_URL).buildUpon()
+                .appendQueryParameter(PARAM_PAGE, getPage_number_string())
+                .appendPath(filterQuery)
+                .appendQueryParameter(PARAM_API_KEY, API_KEY);
+
+        URL url = null;
+
+        try {
+            url = new URL(buildUri.toString());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
+        if (url == null)
+            return "";
+        else
+            return url.toString();
+    }
+
+    // Allow us to store API KEY here
+    static void setApiKey( String ApiKey ) {
+        API_KEY = ApiKey;
+    }
+
+    // Increase current page
+    public static void nextPage() {
+        page_number++;
+    }
+
+    // Set page number we are on
+    public static void setPageNumber( int pagenumber ) {
+        page_number = pagenumber;
+    }
+
+    // Gets the current page number
+    public static int getPage_number() {
+        return page_number;
+    }
+
+    // Get the page number as a string
+    private static String getPage_number_string() {
+        return String.valueOf(page_number);
+    }
+
+    // Get the filter query component
+    static String getFilterQueryString() {
         return filterQuery;
     }
 
-    public static void setSortByFilter( int id ) {
-        sortByFilter = id;
-    }
-
-    public static void setSortByText( int id ) {
+    // Set filter query component
+    static void setSortByText(int id) {
         filterQuery = getSortByText(id);
     }
 
-    public static String getSortByText( int id ) {
+    // Get the sort query component as a string
+    private static String getSortByText(int id) {
         if ( id < queryFilters.length )
             return queryFilters[id];
         else
