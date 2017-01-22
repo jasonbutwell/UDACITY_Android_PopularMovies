@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import java.io.IOException;
@@ -13,15 +15,28 @@ import java.net.URL;
 public class MainActivity extends AppCompatActivity {
 
     private TextView testTV;
+    private FrameLayout loadingIndicator;
 
     private void showSortBy() {
         testTV.setText(TMDBHelper.getFilterQueryString());
+    }
+
+    // Set the loading indicator to be visible or invisible
+    // Shows and hides a frame layout with 2 child views
+    
+    private void showLoadingIndicator( boolean show ) {
+        if ( show )
+            loadingIndicator.setVisibility(View.VISIBLE);
+        else
+            loadingIndicator.setVisibility(View.INVISIBLE);
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        loadingIndicator = (FrameLayout)findViewById(R.id.loadingIndicator);
 
         // Replace here or in APIKey.java with your own 'TMDB API KEY'
         TMDBHelper.setApiKey( APIKey.get() );
@@ -78,6 +93,7 @@ public class MainActivity extends AppCompatActivity {
         protected void onPreExecute() {
             super.onPreExecute();
             // Loading Indicator visible
+            showLoadingIndicator( true );
         }
 
         @Override
@@ -96,6 +112,7 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             // Loading indicator invisible
+            showLoadingIndicator( false );
             testTV.setText(searchResults);
         }
     }

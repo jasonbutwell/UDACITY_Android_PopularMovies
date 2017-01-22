@@ -15,15 +15,18 @@
 
     </ScrollView>
 
-    <ProgressBar
+    <FrameLayout
         android:id="@+id/loadingIndicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center">
+
+    <ProgressBar
         android:layout_width="125dp"
         android:layout_height="125dp"
-        android:layout_gravity="center"
         android:visibility="visible" />
 
     <TextView
-        android:id="@+id/loadingText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="18sp"
@@ -31,5 +34,7 @@
         android:textStyle="bold"
         android:text="@string/loading"
         android:layout_gravity="center" />
+
+    </FrameLayout>
 
 </FrameLayout>
