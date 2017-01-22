@@ -14,16 +14,17 @@ import java.net.URL;
 
     private static String API_KEY;
 
-    private static final String BASE_URL = "http://api.themoviedb.org/3/movie/";
-    private static final String BASE_IMAGE_URL = "http://image.tmdb.org/t/p/";
+    private static final String BASE_URL = "https://api.themoviedb.org/3/discover/movie/";
+    private static final String BASE_IMAGE_URL = "https://image.tmdb.org/t/p/";
 
+    private static final String PARAM_SORTBY = "sort_by";
     private static final String PARAM_API_KEY = "api_key";
     private static final String PARAM_PAGE = "page";
 
     private static final String IMAGE_SIZE = "w185";
 
     static final int POPULAR = 0, TOP_RATED = 1;
-    private static final String[] queryFilters = { "popular", "top_rated" };
+    private static final String[] queryFilters = { "popularity.desc", "top_rated" };
     private static String filterQuery = queryFilters[POPULAR];
     private static int page_number = 1;
 
@@ -36,7 +37,7 @@ import java.net.URL;
     static String buildBaseURL() {
         Uri.Builder buildUri = Uri.parse(BASE_URL).buildUpon()
                 .appendQueryParameter(PARAM_PAGE, getPage_number_string())
-                .appendPath(filterQuery)
+                .appendQueryParameter(PARAM_SORTBY,filterQuery)
                 .appendQueryParameter(PARAM_API_KEY, API_KEY);
 
         URL url = null;

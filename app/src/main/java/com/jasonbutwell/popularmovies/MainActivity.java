@@ -2,6 +2,7 @@ package com.jasonbutwell.popularmovies;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -25,6 +26,8 @@ public class MainActivity extends AppCompatActivity {
         testTV = (TextView) findViewById(R.id.test);
 
         TMDBHelper.setSortByText(TMDBHelper.POPULAR);
+
+        Log.d("TMDB",TMDBHelper.buildBaseURL());
 
         testTV.setText(TMDBHelper.buildBaseURL());
     }
