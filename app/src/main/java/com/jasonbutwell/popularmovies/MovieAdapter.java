@@ -18,11 +18,11 @@ import java.util.ArrayList;
 public class MovieAdapter extends BaseAdapter {
 
     private Context context;
-    private ArrayList<String> movie_posters;
+    private ArrayList<String> movie_posters = new ArrayList<>();
 
-    public MovieAdapter( Context context, ArrayList<String> movieposters ) {
+    public MovieAdapter( Context context, ArrayList<String> movie_posters ) {
         this.context = context;
-        movie_posters = movieposters;
+        this.movie_posters = movie_posters;
     }
 
     @Override
@@ -45,16 +45,18 @@ public class MovieAdapter extends BaseAdapter {
 
         View view = null;
 
-        if ( convertView == null)
+        if ( convertView == null) {
             view = LayoutInflater.from(context).inflate(R.layout.listview_item_image, parent, false);
+        } else {
+            view = (View) convertView;
+        }
 
         // Handle the caching of the image with the Picasso library
-
         Picasso
-           .with(context)
-           .load( movie_posters.get( position ) )
-           .fit()
-           .into((ImageView)view);
+                .with(context)
+                .load( movie_posters.get( position ) )
+                .fit()
+                .into((ImageView)view);
 
         return view;
     }

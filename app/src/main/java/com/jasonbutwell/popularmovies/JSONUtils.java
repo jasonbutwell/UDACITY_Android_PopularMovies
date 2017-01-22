@@ -14,9 +14,10 @@ public final class JSONUtils {
 
     private JSONUtils() {}
 
-    public static ArrayList<String> extractFromJSONArray( String JSONData, String JSONObjectFieldName ) throws JSONException {
+    public static void extractFromJSONArray(String JSONData, String JSONObjectFieldName, ArrayList<String> arrayList) throws JSONException {
 
-        ArrayList<String> field_data = new ArrayList<>();
+//        ArrayList<String> field_data = new ArrayList<>();
+        arrayList.clear();
 
         String JSONArray_start = "results";
 
@@ -28,8 +29,10 @@ public final class JSONUtils {
 
             String JSONdataItem = movieItem.getString( JSONObjectFieldName );
 
-            field_data.add( JSONdataItem );
+//            field_data.add( JSONdataItem );
+            arrayList.add( TMDBHelper.buildImageURL( JSONdataItem));
         }
-        return field_data;
+        //return field_data;
+        //return field_data;
     }
 }

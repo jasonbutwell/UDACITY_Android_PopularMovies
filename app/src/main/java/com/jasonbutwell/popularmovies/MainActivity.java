@@ -8,7 +8,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.GridView;
-import android.widget.TextView;
 
 import org.json.JSONException;
 
@@ -18,16 +17,11 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    private MovieAdapter adapter;
-    //private GridView gridView;
-    private TextView testTV;
+    private GridView gridView;
+    private MovieAdapter movieAdapter;
     private FrameLayout loadingIndicator;
 
     private ArrayList<String> movie_posters;
-
-    private void showSortBy() {
-        testTV.setText(TMDBHelper.getFilterQueryString());
-    }
 
     // Set the loading indicator to be visible or invisible
     // Shows and hides a frame layout with 2 child views
@@ -49,19 +43,20 @@ public class MainActivity extends AppCompatActivity {
 
         movie_posters = new ArrayList<>();
 
-        GridView gridView = (GridView) findViewById(R.id.gridView);
+        movieAdapter = new MovieAdapter(this, movie_posters);
+
+        gridView = (GridView) findViewById(R.id.gridView);
         loadingIndicator = (FrameLayout)findViewById(R.id.loadingIndicator);
 
-        adapter = new MovieAdapter(this, movie_posters);
-        gridView.setAdapter(adapter);
-
+        gridView.setAdapter(movieAdapter);
         TMDBHelper.setSortByText(TMDBHelper.POPULAR);
         loadMovieData();
     }
 
-    private void updateMovies(ArrayList<String> movieposters) {
-        movie_posters = movieposters;
-        adapter.notifyDataSetChanged();
+    private void updateMovies(ArrayList<String> arrayList) {
+        //movie_posters = arrayList;
+        gridView.clearChoices();
+        movieAdapter.notifyDataSetChanged();
     }
 
     private void loadMovieData() {
@@ -104,40 +99,43 @@ public class MainActivity extends AppCompatActivity {
 
         URL UrlToSearch = null;
         String searchResults = null;
+        ArrayList<String> arrayList = new ArrayList<>();
 
         @Override
         protected void onPreExecute() {
-            super.onPreExecute();
+            //super.onPreExecute();
             // Loading Indicator visible
             showLoadingIndicator( true );
         }
 
         @Override
         protected ArrayList<String> doInBackground(URL... urls) {
+
             URL searchURL = null;
             searchURL = urls[0];
 
             try {
                 searchResults = NetworkUtils.getResponseFromHttpUrl( searchURL );
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
             try {
-               movie_posters = JSONUtils.extractFromJSONArray( searchResults, TMDBHelper.JSON_MOVIE_POSTER );
+                JSONUtils.extractFromJSONArray( searchResults, TMDBHelper.JSON_MOVIE_POSTER, movie_posters );
             } catch (JSONException e) {
                 e.printStackTrace();
             }
 
-            return movie_posters;
+            return arrayList;
         }
 
         @Override
-        protected void onPostExecute(ArrayList<String> movie_posters) {
+        protected void onPostExecute(ArrayList<String> arrayList) {
             //super.onPostExecute(s);
             // Loading indicator invisible
             showLoadingIndicator( false );
-            updateMovies(movie_posters);
+            updateMovies(arrayList);
         }
     }
 }
