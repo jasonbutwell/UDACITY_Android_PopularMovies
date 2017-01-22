@@ -18,8 +18,10 @@ public final class JSONUtils {
 
         ArrayList<String> movie_posters = new ArrayList<>();
 
+        String JSONArray_start = "results";
+
         JSONObject movieData = new JSONObject(JSONData);
-        JSONArray movieDataArray = movieData.getJSONArray("results");
+        JSONArray movieDataArray = movieData.getJSONArray(JSONArray_start);
 
         for (int i=0; i< movieDataArray.length(); i++ ) {
             JSONObject movieItem = movieDataArray.getJSONObject(i);
