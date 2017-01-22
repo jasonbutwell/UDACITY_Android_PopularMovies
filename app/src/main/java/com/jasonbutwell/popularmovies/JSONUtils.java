@@ -14,7 +14,7 @@ public final class JSONUtils {
 
     private JSONUtils() {}
 
-    public static ArrayList<String> extractFromJSONArray(String JSONData) throws JSONException {
+    public static ArrayList<String> extractFromJSONArray(String JSONData, String JSONObjectFieldName) throws JSONException {
 
         ArrayList<String> movie_posters = new ArrayList<>();
 
@@ -24,7 +24,7 @@ public final class JSONUtils {
         for (int i=0; i< movieDataArray.length(); i++ ) {
             JSONObject movieItem = movieDataArray.getJSONObject(i);
 
-            String poster_path = movieItem.getString("poster_path");
+            String poster_path = movieItem.getString(JSONObjectFieldName);
             movie_posters.add(poster_path);
         }
         return movie_posters;

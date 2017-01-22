@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             try {
-               movie_posters = JSONUtils.extractFromJSONArray(searchResults);
+               movie_posters = JSONUtils.extractFromJSONArray( searchResults, TMDBHelper.JSON_MOVIE_POSTER );
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -130,8 +130,8 @@ public class MainActivity extends AppCompatActivity {
 
             testTV.setText(searchResults);
 
-            for ( String movie_poster : movie_posters) {
-                testTV.append(movie_poster + "\n");
+            for ( String movie_poster_name : movie_posters) {
+                testTV.append(TMDBHelper.buildImageURL(movie_poster_name) + "\n");
             }
         }
     }

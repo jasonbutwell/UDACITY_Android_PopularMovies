@@ -14,17 +14,37 @@ import java.net.URL;
 
     private static String API_KEY;
 
+    // string literals to facilitate easier extracting of fields from the JSON data
+
+    static final String JSON_MOVIE_ID = "id";
+    static final String JSON_MOVIE_TITLE = "original_title";
+    static final String JSON_MOVIE_POSTER = "poster_path";
+    static final String JSON_MOVIE_BACKGROUND = "backdrop_path";
+    static final String JSON_MOVIE_OVERVIEW = "overview";
+    static final String JSON_MOVIE_RELEASEDATE = "release_date";
+    static final String JSON_MOVIE_ADULT = "adult";
+    static final String JSON_MOVIE_VOTES = "vote_average";
+
+    // For building the base URL and image URLs
+
     private static final String BASE_URL = "https://api.themoviedb.org/3/movie/";
     private static final String BASE_IMAGE_URL = "https://image.tmdb.org/t/p/";
     private static final String IMAGE_SIZE = "w185";
+
+    // various query parameters needed
 
     private static final String PARAM_SORTBY = "sort_by";
     private static final String PARAM_API_KEY = "api_key";
     private static final String PARAM_PAGE = "page";
 
+    // Used for sorting
+
     static final int POPULAR = 0, TOP_RATED = 1;
     private static final String[] queryFilters = { "popular", "top_rated" };
     private static String filterQuery = queryFilters[POPULAR];
+
+    // For expansion, for grabbing multiple pages later on
+
     private static int page_number = 1;
 
     // Quick way to build an Image URL to fetch image extracted from JSON
