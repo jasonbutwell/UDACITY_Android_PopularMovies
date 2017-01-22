@@ -1,11 +1,14 @@
 package com.jasonbutwell.popularmovies;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+
+import java.io.IOException;
+import java.net.URL;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -27,9 +30,11 @@ public class MainActivity extends AppCompatActivity {
 
         TMDBHelper.setSortByText(TMDBHelper.POPULAR);
 
-        Log.d("TMDB",TMDBHelper.buildBaseURL());
+        loadMovieData();
+    }
 
-        testTV.setText(TMDBHelper.buildBaseURL());
+    private void loadMovieData() {
+        new TMDBQueryTask().execute(TMDBHelper.buildBaseURL());
     }
 
     // Create our options menu so we can filter the movies by
@@ -51,16 +56,47 @@ public class MainActivity extends AppCompatActivity {
 
             case R.id.sortby_popular :
                 TMDBHelper.setSortByText(TMDBHelper.POPULAR);
-                testTV.setText(TMDBHelper.buildBaseURL());
+                loadMovieData();
                 return true;
 
             case R.id.sortby_top_rated :
                 TMDBHelper.setSortByText(TMDBHelper.TOP_RATED);
-                testTV.setText(TMDBHelper.buildBaseURL());
+                loadMovieData();
                 return true;
 
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    public class TMDBQueryTask extends AsyncTask<URL, Void, String> {
+
+        URL UrlToSearch = null;
+        String searchResults = null;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            // Loading Indicator visible
+        }
+
+        @Override
+        protected String doInBackground(URL... urls) {
+            URL searchURL = urls[0];
+
+            try {
+                searchResults = NetworkUtils.getResponseFromHttpUrl( searchURL );
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return searchResults;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            // Loading indicator invisible
+            testTV.setText(searchResults);
         }
     }
 }

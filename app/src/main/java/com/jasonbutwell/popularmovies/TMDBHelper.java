@@ -33,14 +33,14 @@ import java.net.URL;
     }
 
     // Builds the base URL to retrieve the JSON
-    static String buildBaseURL() {
+    static URL buildBaseURL() {
+        URL url = null;
+
         Uri.Builder buildUri = Uri.parse(BASE_URL).buildUpon()
                 .appendQueryParameter(PARAM_PAGE, getPage_number_string())
                 //.appendQueryParameter(PARAM_SORTBY,filterQuery)
                 .appendPath(filterQuery)
                 .appendQueryParameter(PARAM_API_KEY, API_KEY);
-
-        URL url = null;
 
         try {
             url = new URL(buildUri.toString());
@@ -48,10 +48,7 @@ import java.net.URL;
             e.printStackTrace();
         }
 
-        if (url == null)
-            return "";
-        else
-            return url.toString();
+        return url;
     }
 
     // Allow us to store API KEY here
