@@ -1,7 +1,5 @@
 package com.jasonbutwell.popularmovies;
 
-import android.util.Log;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -73,12 +71,12 @@ final class JSONUtils {
                         release = movieItem.getString( TMDBHelper.JSON_MOVIE_RELEASEDATE );
 
                         // DEBUG OUTPUT
-                        Log.i("MOVIE id:",id);
-                        Log.i("MOVIE title:",title);
-                        Log.i("MOVIE poster:",posterURL);
-                        Log.i("MOVIE plot:",synopsis);
-                        Log.i("MOVIE rating:",rating);
-                        Log.i("MOVIE release:",release);
+//                        Log.i("MOVIE id:",id);
+//                        Log.i("MOVIE title:",title);
+//                        Log.i("MOVIE poster:",posterURL);
+//                        Log.i("MOVIE plot:",synopsis);
+//                        Log.i("MOVIE rating:",rating);
+//                        Log.i("MOVIE release:",release);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();

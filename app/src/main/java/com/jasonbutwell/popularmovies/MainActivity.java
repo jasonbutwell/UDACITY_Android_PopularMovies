@@ -21,17 +21,8 @@ public class MainActivity extends AppCompatActivity {
     private MovieAdapter movieAdapter;
     private FrameLayout loadingIndicator;
 
+    // This is where we will store our movies
     private ArrayList<MovieItem> movies = new ArrayList<>();
-
-    // Set the loading indicator to be visible or invisible
-    // Shows and hides a frame layout with 2 child views
-    
-    private void showLoadingIndicator( boolean show ) {
-        if ( show )
-            loadingIndicator.setVisibility(View.VISIBLE);
-        else
-            loadingIndicator.setVisibility(View.INVISIBLE);
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +52,16 @@ public class MainActivity extends AppCompatActivity {
         });
 
         loadMovieData();
+    }
+
+    // Set the loading indicator to be visible or invisible
+    // Shows and hides a frame layout with 2 child views
+
+    private void showLoadingIndicator( boolean show ) {
+        if ( show )
+            loadingIndicator.setVisibility(View.VISIBLE);
+        else
+            loadingIndicator.setVisibility(View.INVISIBLE);
     }
 
     // Pass the selected movie's details to the intent to show that information to the user.
@@ -123,7 +124,10 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public class TMDBQueryTask extends AsyncTask<URL, Void, ArrayList<MovieItem>> {
+    // We use this to grab the JSON for the movies we want to see
+    // We then break up the results and store them in an arraylist of custom type MovieItem
+
+    public class TMDBQueryTask extends AsyncTask< URL, Void, ArrayList<MovieItem> > {
 
         URL UrlToSearch = null;
         String searchResults = null;
@@ -136,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        protected ArrayList<MovieItem> doInBackground(URL... urls) {
+        protected ArrayList<MovieItem> doInBackground( URL... urls ) {
 
             URL searchURL = null;
             searchURL = urls[0];
@@ -154,7 +158,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        protected void onPostExecute(ArrayList<MovieItem> arrayList) {
+        protected void onPostExecute( ArrayList<MovieItem> arrayList ) {
             // Loading indicator invisible
             showLoadingIndicator( false );
             updateMovies(arrayList);

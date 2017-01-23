@@ -14,6 +14,8 @@ import java.net.URL;
 
 public class MovieDetails extends AppCompatActivity {
 
+    // References for our UI components
+
     private TextView movieTitleView;
     private ImageView moviePosterURLView;
     private TextView movieSynopsisView;
@@ -26,6 +28,8 @@ public class MovieDetails extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_details);
 
+        // obtain and store those references
+
         movieTitleView = (TextView)findViewById(R.id.movieTitle);
         moviePosterURLView = (ImageView) findViewById(R.id.moviePoster);
         movieSynopsisView = (TextView) findViewById(R.id.movieDescription);
@@ -33,7 +37,10 @@ public class MovieDetails extends AppCompatActivity {
         movieReleaseView = (TextView) findViewById(R.id.movieReleaseDate);
         movieDurationView = (TextView) findViewById(R.id.movieDuration);
 
+        // Get the calling itent passed over
         Intent movieDetailsIntent = getIntent();
+
+        // Obtain the data passed with the intent as extras
 
         String id = movieDetailsIntent.getStringExtra(TMDBHelper.JSON_MOVIE_ID);
         String movieTitle = movieDetailsIntent.getStringExtra(TMDBHelper.JSON_MOVIE_TITLE);
@@ -42,6 +49,7 @@ public class MovieDetails extends AppCompatActivity {
         String movieRating = movieDetailsIntent.getStringExtra(TMDBHelper.JSON_MOVIE_VOTES);
         String movieRelease = movieDetailsIntent.getStringExtra(TMDBHelper.JSON_MOVIE_RELEASEDATE);
 
+        // show the movie title
         if ( movieTitle != null )
             movieTitleView.setText(movieTitle);
 
@@ -55,22 +63,28 @@ public class MovieDetails extends AppCompatActivity {
                     .into((ImageView)moviePosterURLView);
         }
 
+        // show the synopsis
         if ( movieSynopsis != null ) {
             movieSynopsisView.setText(movieSynopsis);
         }
 
+        // show the rating
         if ( movieRating != null ) {
-            movieRatingView.setText(movieRating + " / 10");
+            String rating = movieRating + " / 10";
+            movieRatingView.setText(rating);
         }
 
+        // show the release date (reformatted)
         if ( movieRelease != null ) {
             movieReleaseView.setText(TMDBHelper.USDateToUKDate( movieRelease ));
         }
 
+        // Call a new task to obtain the run duration from the movies JSON using it's id
         new TMDBQueryDetailsTask().execute( TMDBHelper.buildDetailURL(id) );
     }
 
     // We use this to grab the runtime from the movie info using just the id
+    // We could build upon this to grab additional information in future
 
     public class TMDBQueryDetailsTask extends AsyncTask<URL, Void, String> {
 
