@@ -128,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
 
-            arrayList = JSONUtils.extractFromJSONArray( searchResults, TMDBHelper.JSON_MOVIE_POSTER );
+            arrayList = JSONUtils.extractFromJSONArray( searchResults );
 
             return arrayList;
         }

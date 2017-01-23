@@ -14,7 +14,7 @@ final class JSONUtils {
 
     private JSONUtils() {}
 
-    static ArrayList<MovieItem> extractFromJSONArray(String JSONData, String JSONObjectFieldName)  {
+    static ArrayList<MovieItem> extractFromJSONArray(String JSONData)  {
 
         ArrayList<MovieItem> data = new ArrayList<>();
         JSONArray movieDataArray = null;
@@ -44,17 +44,34 @@ final class JSONUtils {
                     e.printStackTrace();
                 }
 
-                String JSONdataItem = null;
+                String title = null, posterURL = null, synopsis = null, rating = null, release = null;
+
                 try {
                     if (movieItem != null) {
-                        JSONdataItem = movieItem.getString( JSONObjectFieldName );
+                        // extract the field strings needed
+                        title = movieItem.getString( TMDBHelper.JSON_MOVIE_TITLE );
+                        posterURL = movieItem.getString( TMDBHelper.JSON_MOVIE_POSTER );
+                        synopsis = movieItem.getString( TMDBHelper.JSON_MOVIE_OVERVIEW );
+                        rating = movieItem.getString( TMDBHelper.JSON_MOVIE_VOTES );
+                        release = movieItem.getString( TMDBHelper.JSON_MOVIE_RELEASEDATE );
+
+                        // DEBUG OUTPUT
+//                        Log.i("MOVIE:",title);
+//                        Log.i("MOVIE:",posterURL);
+//                        Log.i("MOVIE:",synopsis);
+//                        Log.i("MOVIE:",rating);
+//                        Log.i("MOVIE:",release);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
 
                 MovieItem movie = new MovieItem();
-                movie.setPosterURL(TMDBHelper.buildImageURL( JSONdataItem ));
+                movie.setOriginalTitle( title );
+                movie.setPosterURL( TMDBHelper.buildImageURL( posterURL ));
+                movie.setPlotSynopsis( synopsis );
+                movie.setUserRating( rating );
+                movie.setReleaseDate( release );
                 data.add( movie );
             }
         }
