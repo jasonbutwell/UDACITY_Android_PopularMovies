@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
         // Replace here or in APIKey.java with your own 'TMDB API KEY'
         TMDBHelper.setApiKey( APIKey.get() );
 
-        ArrayList<String> movie_posters = new ArrayList<>();
+        ArrayList<MovieItem> movie_posters = new ArrayList<>();
         movieAdapter = new MovieAdapter(this, movie_posters);
 
         gridView = (GridView) findViewById(R.id.gridView);
@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
         loadMovieData();
     }
 
-    private void updateMovies(ArrayList<String> arrayList) {
+    private void updateMovies(ArrayList<MovieItem> arrayList) {
         // Scroll to first item in grid
         gridView.smoothScrollToPosition(0);
         // reset the dataset for the adapter
@@ -103,11 +103,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public class TMDBQueryTask extends AsyncTask<URL, Void, ArrayList<String>> {
+    public class TMDBQueryTask extends AsyncTask<URL, Void, ArrayList<MovieItem>> {
 
         URL UrlToSearch = null;
         String searchResults = null;
-        ArrayList<String> arrayList = null;
+        ArrayList<MovieItem> arrayList = null;
 
         @Override
         protected void onPreExecute() {
@@ -116,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        protected ArrayList<String> doInBackground(URL... urls) {
+        protected ArrayList<MovieItem> doInBackground(URL... urls) {
 
             URL searchURL = null;
             searchURL = urls[0];
@@ -134,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        protected void onPostExecute(ArrayList<String> arrayList) {
+        protected void onPostExecute(ArrayList<MovieItem> arrayList) {
             // Loading indicator invisible
             showLoadingIndicator( false );
             updateMovies(arrayList);

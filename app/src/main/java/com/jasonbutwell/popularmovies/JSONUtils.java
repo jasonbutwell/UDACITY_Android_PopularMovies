@@ -14,9 +14,9 @@ final class JSONUtils {
 
     private JSONUtils() {}
 
-    static ArrayList<String> extractFromJSONArray(String JSONData, String JSONObjectFieldName)  {
+    static ArrayList<MovieItem> extractFromJSONArray(String JSONData, String JSONObjectFieldName)  {
 
-        ArrayList<String> data = new ArrayList<>();
+        ArrayList<MovieItem> data = new ArrayList<>();
         JSONArray movieDataArray = null;
         String JSONArray_start = "results";
 
@@ -53,7 +53,9 @@ final class JSONUtils {
                     e.printStackTrace();
                 }
 
-                data.add( TMDBHelper.buildImageURL( JSONdataItem ));
+                MovieItem movie = new MovieItem();
+                movie.setPosterURL(TMDBHelper.buildImageURL( JSONdataItem ));
+                data.add( movie );
             }
         }
         return data;

@@ -19,21 +19,21 @@ import java.util.ArrayList;
 public class MovieAdapter extends BaseAdapter {
 
     private Context context;
-    private ArrayList<String> movie_posters;
+    private ArrayList<MovieItem> movies;
 
-    public MovieAdapter( Context context, ArrayList<String> movie_posters ) {
+    public MovieAdapter( Context context, ArrayList<MovieItem> movies ) {
         this.context = context;
-        this.movie_posters = movie_posters;
+        this.movies = movies;
     }
 
-    public void setData( ArrayList<String> movie_posters ) {
-        this.movie_posters = movie_posters;
+    public void setData( ArrayList<MovieItem> movies ) {
+        this.movies = movies;
         notifyDataSetChanged();
     }
 
     @Override
     public int getCount() {
-        return movie_posters.size();
+        return movies.size();
     }
 
     @Override
@@ -59,12 +59,14 @@ public class MovieAdapter extends BaseAdapter {
 //            view = (View) convertView;
 //        }
 
-        // Handle the caching of the image with the Picasso library
-        Picasso
-                .with(context)
-                .load( movie_posters.get( position ) )
-                .fit()
-                .into((ImageView)view);
+        if ( movies.get(position).getPosterURL() != null ) {
+            // Handle the caching of the image with the Picasso library
+            Picasso
+                    .with(context)
+                    .load( movies.get( position ).getPosterURL() )
+                    .fit()
+                    .into((ImageView)view);
+        }
 
         return view;
     }
