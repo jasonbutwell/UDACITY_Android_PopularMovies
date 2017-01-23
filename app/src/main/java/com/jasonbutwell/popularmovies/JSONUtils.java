@@ -36,7 +36,7 @@ final class JSONUtils {
         }
 
         if (movieDataArray != null) {
-            for ( int i=0; i< movieDataArray.length(); i++ ) {
+            for ( int i=0; i < movieDataArray.length(); i++ ) {
                 JSONObject movieItem = null;
                 try {
                     movieItem = movieDataArray.getJSONObject( i );
