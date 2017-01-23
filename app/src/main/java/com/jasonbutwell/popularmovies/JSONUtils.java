@@ -10,29 +10,52 @@ import java.util.ArrayList;
  * Created by J on 22/01/2017.
  */
 
-public final class JSONUtils {
+final class JSONUtils {
 
     private JSONUtils() {}
 
-    public static void extractFromJSONArray(String JSONData, String JSONObjectFieldName, ArrayList<String> arrayList) throws JSONException {
+    static ArrayList extractFromJSONArray(String JSONData, String JSONObjectFieldName)  {
 
-//        ArrayList<String> field_data = new ArrayList<>();
-        arrayList.clear();
-
+        ArrayList<String> data = new ArrayList<>();
+        JSONArray movieDataArray = null;
         String JSONArray_start = "results";
 
-        JSONObject movieData = new JSONObject( JSONData );
-        JSONArray movieDataArray = movieData.getJSONArray( JSONArray_start );
-
-        for ( int i=0; i< movieDataArray.length(); i++ ) {
-            JSONObject movieItem = movieDataArray.getJSONObject( i );
-
-            String JSONdataItem = movieItem.getString( JSONObjectFieldName );
-
-//            field_data.add( JSONdataItem );
-            arrayList.add( TMDBHelper.buildImageURL( JSONdataItem));
+        JSONObject movieData = null;
+        try {
+            movieData = new JSONObject( JSONData );
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
-        //return field_data;
-        //return field_data;
+
+        try {
+            if (movieData != null) {
+                movieDataArray = movieData.getJSONArray( JSONArray_start );
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        if (movieDataArray != null) {
+            for ( int i=0; i< movieDataArray.length(); i++ ) {
+                JSONObject movieItem = null;
+                try {
+                    movieItem = movieDataArray.getJSONObject( i );
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                String JSONdataItem = null;
+                try {
+                    if (movieItem != null) {
+                        JSONdataItem = movieItem.getString( JSONObjectFieldName );
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                data.add( TMDBHelper.buildImageURL( JSONdataItem ));
+            }
+        }
+        return data;
     }
 }

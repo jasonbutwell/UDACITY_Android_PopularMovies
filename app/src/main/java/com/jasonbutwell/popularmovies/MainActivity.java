@@ -9,8 +9,6 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.GridView;
 
-import org.json.JSONException;
-
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -54,9 +52,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updateMovies(ArrayList<String> arrayList) {
-        //movie_posters = arrayList;
-        gridView.clearChoices();
-        movieAdapter.notifyDataSetChanged();
+        // Scroll to first item in grid
+        gridView.smoothScrollToPosition(0);
+        // reset the dataset for the adapter
+        movieAdapter.setData(arrayList);
     }
 
     private void loadMovieData() {
@@ -99,11 +98,10 @@ public class MainActivity extends AppCompatActivity {
 
         URL UrlToSearch = null;
         String searchResults = null;
-        ArrayList<String> arrayList = new ArrayList<>();
+        ArrayList<String> arrayList;
 
         @Override
         protected void onPreExecute() {
-            //super.onPreExecute();
             // Loading Indicator visible
             showLoadingIndicator( true );
         }
@@ -121,18 +119,13 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
 
-            try {
-                JSONUtils.extractFromJSONArray( searchResults, TMDBHelper.JSON_MOVIE_POSTER, movie_posters );
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+            arrayList = JSONUtils.extractFromJSONArray( searchResults, TMDBHelper.JSON_MOVIE_POSTER );
 
             return arrayList;
         }
 
         @Override
         protected void onPostExecute(ArrayList<String> arrayList) {
-            //super.onPostExecute(s);
             // Loading indicator invisible
             showLoadingIndicator( false );
             updateMovies(arrayList);
