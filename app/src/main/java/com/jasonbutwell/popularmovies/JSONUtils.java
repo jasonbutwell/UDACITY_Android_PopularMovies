@@ -44,11 +44,12 @@ final class JSONUtils {
                     e.printStackTrace();
                 }
 
-                String title = null, posterURL = null, synopsis = null, rating = null, release = null;
+                String id = null, title = null, posterURL = null, synopsis = null, rating = null, release = null;
 
                 try {
                     if (movieItem != null) {
                         // extract the field strings needed
+                        id = movieItem.getString(TMDBHelper.JSON_MOVIE_ID);
                         title = movieItem.getString( TMDBHelper.JSON_MOVIE_TITLE );
                         posterURL = movieItem.getString( TMDBHelper.JSON_MOVIE_POSTER );
                         synopsis = movieItem.getString( TMDBHelper.JSON_MOVIE_OVERVIEW );
@@ -67,6 +68,7 @@ final class JSONUtils {
                 }
 
                 MovieItem movie = new MovieItem();
+                movie.setId(id);
                 movie.setOriginalTitle( title );
                 movie.setPosterURL( TMDBHelper.buildImageURL( posterURL ));
                 movie.setPlotSynopsis( synopsis );

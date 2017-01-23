@@ -24,6 +24,7 @@ import java.net.URL;
     static final String JSON_MOVIE_RELEASEDATE = "release_date";
     static final String JSON_MOVIE_ADULT = "adult";
     static final String JSON_MOVIE_VOTES = "vote_average";
+    static final String JSON_MOVIE_DURATION = "duration";
 
     // For building the base URL and image URLs
 
@@ -58,12 +59,14 @@ import java.net.URL;
 
         Uri.Builder buildUri = Uri.parse(BASE_URL).buildUpon()
                 .appendQueryParameter(PARAM_PAGE, getPage_number_string())
-                //.appendQueryParameter(PARAM_SORTBY,filterQuery)
                 .appendPath(filterQuery)
                 .appendQueryParameter(PARAM_API_KEY, API_KEY);
 
         try {
             url = new URL(buildUri.toString());
+
+            //Log.i("URL", url.toString());
+
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }

@@ -1,5 +1,6 @@
 package com.jasonbutwell.popularmovies;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -9,7 +10,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.GridView;
-import android.widget.Toast;
 
 import java.io.IOException;
 import java.net.URL;
@@ -20,6 +20,8 @@ public class MainActivity extends AppCompatActivity {
     private GridView gridView;
     private MovieAdapter movieAdapter;
     private FrameLayout loadingIndicator;
+
+    private ArrayList<MovieItem> movies = new ArrayList<>();
 
     // Set the loading indicator to be visible or invisible
     // Shows and hides a frame layout with 2 child views
@@ -39,8 +41,7 @@ public class MainActivity extends AppCompatActivity {
         // Replace here or in APIKey.java with your own 'TMDB API KEY'
         TMDBHelper.setApiKey( APIKey.get() );
 
-        ArrayList<MovieItem> movie_posters = new ArrayList<>();
-        movieAdapter = new MovieAdapter(this, movie_posters);
+        movieAdapter = new MovieAdapter(this, movies);
 
         gridView = (GridView) findViewById(R.id.gridView);
         loadingIndicator = (FrameLayout)findViewById(R.id.loadingIndicator);
@@ -53,18 +54,37 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 // Display a toast message for now. Will override with film details later.
-                Toast.makeText(getApplicationContext(),"You clicked on item #"+String.valueOf(position),Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(),"You clicked on item #"+String.valueOf(position),Toast.LENGTH_SHORT).show();
+
+                showMovieDetails( position );
             }
         });
 
         loadMovieData();
     }
 
+    // Pass the selected movie's details to the intent to show that information to the user.
+
+    private void showMovieDetails( int position ) {
+
+        Intent movieDetailsIntent = new Intent( getApplicationContext(), MovieDetails.class );
+
+        movieDetailsIntent.putExtra( TMDBHelper.JSON_MOVIE_TITLE, movies.get(position).getOriginalTitle() );
+        movieDetailsIntent.putExtra( TMDBHelper.JSON_MOVIE_POSTER, movies.get(position).getPosterURL() );
+        movieDetailsIntent.putExtra( TMDBHelper.JSON_MOVIE_OVERVIEW, movies.get(position).getPlotSynopsis() );
+        movieDetailsIntent.putExtra( TMDBHelper.JSON_MOVIE_VOTES, movies.get(position).getUserRating() );
+        movieDetailsIntent.putExtra( TMDBHelper.JSON_MOVIE_RELEASEDATE, movies.get(position).getReleaseDate() );
+        //movieDetailsIntent.putExtra( TMDBHelper.)
+
+        startActivity(movieDetailsIntent);
+    }
+
     private void updateMovies(ArrayList<MovieItem> arrayList) {
+        movies = arrayList;
         // Scroll to first item in grid
         gridView.smoothScrollToPosition(0);
         // reset the dataset for the adapter
-        movieAdapter.setData(arrayList);
+        movieAdapter.setData(movies);
     }
 
     private void loadMovieData() {

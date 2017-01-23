@@ -7,6 +7,7 @@ package com.jasonbutwell.popularmovies;
 // Will be used to store specific information on each movie
 
 public class MovieItem {
+    private String id;
     private String originalTitle;
     private String plotSynopsis;
     private String userRating;
@@ -18,6 +19,14 @@ public class MovieItem {
     }
 
     public MovieItem() {
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getOriginalTitle() {
