@@ -1,6 +1,7 @@
 package com.jasonbutwell.popularmovies;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
@@ -8,21 +9,33 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
+import java.net.URL;
+
 public class MovieDetails extends AppCompatActivity {
+
+    private TextView movieTitleView;
+    private ImageView moviePosterURLView;
+    private TextView movieSynopsisView;
+    private TextView movieRatingView;
+    private TextView movieReleaseView;
+    private TextView movieDurationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_details);
 
-        TextView movieTitleView = (TextView)findViewById(R.id.movieTitle);
-        ImageView moviePosterURLView = (ImageView) findViewById(R.id.moviePoster);
-        TextView movieSynopsisView = (TextView) findViewById(R.id.movieDescription);
-        TextView movieRatingView = (TextView) findViewById(R.id.movieRating);
-        TextView movieReleaseView = (TextView) findViewById(R.id.movieReleaseDate);
+        movieTitleView = (TextView)findViewById(R.id.movieTitle);
+        moviePosterURLView = (ImageView) findViewById(R.id.moviePoster);
+        movieSynopsisView = (TextView) findViewById(R.id.movieDescription);
+        movieRatingView = (TextView) findViewById(R.id.movieRating);
+        movieReleaseView = (TextView) findViewById(R.id.movieReleaseDate);
+        movieDurationView = (TextView) findViewById(R.id.movieDuration);
 
         Intent movieDetailsIntent = getIntent();
 
+        String id = movieDetailsIntent.getStringExtra(TMDBHelper.JSON_MOVIE_ID);
         String movieTitle = movieDetailsIntent.getStringExtra(TMDBHelper.JSON_MOVIE_TITLE);
         String moviePoster = movieDetailsIntent.getStringExtra(TMDBHelper.JSON_MOVIE_POSTER);
         String movieSynopsis = movieDetailsIntent.getStringExtra(TMDBHelper.JSON_MOVIE_OVERVIEW);
@@ -31,6 +44,8 @@ public class MovieDetails extends AppCompatActivity {
 
         if ( movieTitle != null )
             movieTitleView.setText(movieTitle);
+
+        // Shows the image thumbnail for the movie
 
         if ( moviePoster != null ) {
             Picasso
@@ -45,12 +60,51 @@ public class MovieDetails extends AppCompatActivity {
         }
 
         if ( movieRating != null ) {
-            movieRatingView.setText(movieRating);
+            movieRatingView.setText(movieRating + " / 10");
         }
 
         if ( movieRelease != null ) {
-            movieReleaseView.setText(movieRelease);
+            movieReleaseView.setText(TMDBHelper.USDateToUKDate( movieRelease ));
         }
 
+        new TMDBQueryDetailsTask().execute( TMDBHelper.buildDetailURL(id) );
     }
+
+    // We use this to grab the runtime from the movie info using just the id
+
+    public class TMDBQueryDetailsTask extends AsyncTask<URL, Void, String> {
+
+        URL UrlToSearch = null;
+        String searchResults = null;
+        String data = null;
+
+        @Override
+        protected void onPreExecute() {
+        }
+
+        @Override
+        protected String doInBackground(URL... urls) {
+
+            URL searchURL = null;
+            searchURL = urls[0];
+
+            try {
+                searchResults = NetworkUtils.getResponseFromHttpUrl( searchURL );
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            data = JSONUtils.extractJSONString( searchResults, "runtime" );
+
+            return data;
+        }
+
+        @Override
+        protected void onPostExecute(String data) {
+
+            movieDurationView.setText( TMDBHelper.convertToHoursMins( data ) );
+        }
+    }
+
 }

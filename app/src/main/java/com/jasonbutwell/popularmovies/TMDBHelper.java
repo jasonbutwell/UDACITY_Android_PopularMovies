@@ -4,6 +4,9 @@ import android.net.Uri;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Created by J on 21/01/2017.
@@ -47,6 +50,72 @@ import java.net.URL;
     // For expansion, for grabbing multiple pages later on
 
     private static int page_number = 1;
+
+    // Helper function to convert mins to hours and mins
+
+    static String convertToHoursMins( String duration ) {
+        String timeString = "";
+        String hoursString = "";
+
+        if ( duration != null && !duration.equals("")) {
+            int hours = Integer.parseInt(duration) / 60;
+            int mins = Integer.parseInt(duration) % 60;
+
+            // Hours or Hour?
+
+            if ( hours > 1 )
+                hoursString = "hours";
+            else
+                hoursString = "hour";
+
+            timeString = String.format("%d %s %d mins", hours, hoursString, mins);
+        }
+
+        return timeString;
+    }
+
+    // Formats the US date to a UK one
+
+    static String USDateToUKDate( String dateToParse ) {
+        String formattedDate = formatDate("yyyy-MM-dd", dateToParse, "dd.MM.yyyy" );
+        return formattedDate;
+    }
+
+    // Helper routine to help reformat dates
+
+    static String formatDate(String dateFormat, String dateToParse, String dateOutputFormat ) {
+        Date date = null;
+        String formattedDate = null;
+
+        if ( dateFormat != null && dateToParse != null && dateOutputFormat != null ) {
+            try {
+                date = new SimpleDateFormat(dateFormat).parse(dateToParse);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            formattedDate = new SimpleDateFormat(dateOutputFormat).format(date);
+        }
+
+        return formattedDate;
+    }
+
+    static URL buildDetailURL( String id ) {
+        URL url = null;
+
+        Uri.Builder buildUri =
+                Uri.parse(BASE_URL).buildUpon()
+                .appendPath(id)
+                .appendQueryParameter(PARAM_API_KEY, API_KEY);
+
+        try {
+            url = new URL(buildUri.toString());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
+        return url;
+    }
 
     // Quick way to build an Image URL to fetch image extracted from JSON
     static String buildImageURL(String imageName) {

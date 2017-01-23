@@ -69,12 +69,12 @@ public class MainActivity extends AppCompatActivity {
 
         Intent movieDetailsIntent = new Intent( getApplicationContext(), MovieDetails.class );
 
+        movieDetailsIntent.putExtra( TMDBHelper.JSON_MOVIE_ID, movies.get(position).getId());
         movieDetailsIntent.putExtra( TMDBHelper.JSON_MOVIE_TITLE, movies.get(position).getOriginalTitle() );
         movieDetailsIntent.putExtra( TMDBHelper.JSON_MOVIE_POSTER, movies.get(position).getPosterURL() );
         movieDetailsIntent.putExtra( TMDBHelper.JSON_MOVIE_OVERVIEW, movies.get(position).getPlotSynopsis() );
         movieDetailsIntent.putExtra( TMDBHelper.JSON_MOVIE_VOTES, movies.get(position).getUserRating() );
         movieDetailsIntent.putExtra( TMDBHelper.JSON_MOVIE_RELEASEDATE, movies.get(position).getReleaseDate() );
-        //movieDetailsIntent.putExtra( TMDBHelper.)
 
         startActivity(movieDetailsIntent);
     }
@@ -148,7 +148,7 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
 
-            arrayList = JSONUtils.extractFromJSONArray( searchResults );
+            arrayList = JSONUtils.extractJSONArray( searchResults );
 
             return arrayList;
         }
@@ -160,4 +160,5 @@ public class MainActivity extends AppCompatActivity {
             updateMovies(arrayList);
         }
     }
+
 }
