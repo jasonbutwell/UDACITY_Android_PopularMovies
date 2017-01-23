@@ -6,8 +6,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.GridView;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.net.URL;
@@ -18,8 +20,6 @@ public class MainActivity extends AppCompatActivity {
     private GridView gridView;
     private MovieAdapter movieAdapter;
     private FrameLayout loadingIndicator;
-
-    private ArrayList<String> movie_posters;
 
     // Set the loading indicator to be visible or invisible
     // Shows and hides a frame layout with 2 child views
@@ -39,8 +39,7 @@ public class MainActivity extends AppCompatActivity {
         // Replace here or in APIKey.java with your own 'TMDB API KEY'
         TMDBHelper.setApiKey( APIKey.get() );
 
-        movie_posters = new ArrayList<>();
-
+        ArrayList<String> movie_posters = new ArrayList<>();
         movieAdapter = new MovieAdapter(this, movie_posters);
 
         gridView = (GridView) findViewById(R.id.gridView);
@@ -48,6 +47,16 @@ public class MainActivity extends AppCompatActivity {
 
         gridView.setAdapter(movieAdapter);
         TMDBHelper.setSortByText(TMDBHelper.POPULAR);
+
+        // Click Listener for the gridView
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                // Display a toast message for now. Will override with film details later.
+                Toast.makeText(getApplicationContext(),"You clicked on item #"+String.valueOf(position),Toast.LENGTH_SHORT).show();
+            }
+        });
+
         loadMovieData();
     }
 
@@ -98,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
 
         URL UrlToSearch = null;
         String searchResults = null;
-        ArrayList<String> arrayList;
+        ArrayList<String> arrayList = null;
 
         @Override
         protected void onPreExecute() {

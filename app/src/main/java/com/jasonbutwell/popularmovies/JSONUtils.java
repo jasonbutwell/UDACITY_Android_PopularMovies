@@ -14,7 +14,7 @@ final class JSONUtils {
 
     private JSONUtils() {}
 
-    static ArrayList extractFromJSONArray(String JSONData, String JSONObjectFieldName)  {
+    static ArrayList<String> extractFromJSONArray(String JSONData, String JSONObjectFieldName)  {
 
         ArrayList<String> data = new ArrayList<>();
         JSONArray movieDataArray = null;
