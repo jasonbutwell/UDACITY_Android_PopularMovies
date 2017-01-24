@@ -12,6 +12,8 @@ import java.util.ArrayList;
 
 final class JSONUtils {
 
+    private static ArrayList<MovieItem> movies = new ArrayList<>();
+
     private JSONUtils() {}
 
     static String extractJSONString( String JSONData, String extractString ) {
@@ -30,11 +32,13 @@ final class JSONUtils {
 
     static ArrayList<MovieItem> extractJSONArray(String JSONData)  {
 
-        ArrayList<MovieItem> data = new ArrayList<>();
         JSONArray movieDataArray = null;
         String JSONArray_start = "results";
 
         JSONObject movieData = null;
+
+        movies.clear();
+
         try {
             movieData = new JSONObject( JSONData );
         } catch (JSONException e) {
@@ -70,6 +74,9 @@ final class JSONUtils {
                         rating = movieItem.getString( TMDBHelper.MOVIE_VOTES );
                         release = movieItem.getString( TMDBHelper.MOVIE_RELEASEDATE );
 
+                        // add the new movie to the array list
+                        movies.add( TMDBHelper.buildMovie( id, title, posterURL, synopsis, rating, release ) );
+
                         // DEBUG OUTPUT
 //                        Log.i("MOVIE id:",id);
 //                        Log.i("MOVIE title:",title);
@@ -81,17 +88,8 @@ final class JSONUtils {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
-                MovieItem movie = new MovieItem();
-                movie.setId(id);
-                movie.setOriginalTitle( title );
-                movie.setPosterURL( TMDBHelper.buildImageURL( posterURL ));
-                movie.setPlotSynopsis( synopsis );
-                movie.setUserRating( rating );
-                movie.setReleaseDate( release );
-                data.add( movie );
             }
         }
-        return data;
+        return movies;
     }
 }

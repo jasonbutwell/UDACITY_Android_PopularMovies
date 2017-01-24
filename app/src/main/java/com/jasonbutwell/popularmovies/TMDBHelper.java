@@ -19,7 +19,6 @@ import java.util.Locale;
     private static String API_KEY;
 
     // string literals to facilitate easier extracting of fields from the JSON data
-
     static final String MOVIE_ID = "id";
     static final String MOVIE_TITLE = "original_title";
     static final String MOVIE_POSTER = "poster_path";
@@ -31,29 +30,37 @@ import java.util.Locale;
     static final String MOVIE_DURATION = "duration";
 
     // For building the base URL and image URLs
-
     private static final String BASE_URL = "https://api.themoviedb.org/3/movie/";
     private static final String BASE_IMAGE_URL = "https://image.tmdb.org/t/p/";
     private static final String IMAGE_SIZE = "w185";
 
     // various query parameters needed
-
     private static final String PARAM_SORTBY = "sort_by";
     private static final String PARAM_API_KEY = "api_key";
     private static final String PARAM_PAGE = "page";
 
     // Used for sorting
-
     static final int POPULAR = 0, TOP_RATED = 1;
     private static final String[] queryFilters = { "popular", "top_rated" };
     private static String filterQuery = queryFilters[POPULAR];
 
     // For expansion, for grabbing multiple pages later on
-
     private static int page_number = 1;
 
-    // Helper function to convert mins to hours and mins
+    // Builds a movie item and returns it
+    static MovieItem buildMovie( String id, String title, String posterURL, String synopsis, String rating, String release ) {
+        MovieItem movie = new MovieItem();
+        movie.setId(id);
+        movie.setOriginalTitle( title );
+        movie.setPosterURL( TMDBHelper.buildImageURL( posterURL ));
+        movie.setPlotSynopsis( synopsis );
+        movie.setUserRating( rating );
+        movie.setReleaseDate( release );
 
+        return movie;
+    }
+
+    // Helper function to convert mins to hours and mins
     static String convertToHoursMins( String duration ) {
         String timeString = "";
         String hoursString = "";
@@ -61,15 +68,19 @@ import java.util.Locale;
         if ( duration != null && !duration.equals("")) {
             int hours = Integer.parseInt(duration) / 60;
             int mins = Integer.parseInt(duration) % 60;
+            hoursString = "hour";
 
             // Hours or Hour?
+            if ( hours == 0 )
+                    timeString = String.format(Locale.ENGLISH,"%d mins", mins);
+                else {
+                    if (hours > 1)
+                        hoursString = "hours";
 
-            if ( hours > 1 )
-                hoursString = "hours";
-            else
-                hoursString = "hour";
+                    timeString = String.format(Locale.ENGLISH, "%d %s %d mins", hours, hoursString, mins);
+                }
 
-            timeString = String.format(Locale.ENGLISH,"%d %s %d mins", hours, hoursString, mins);
+            //timeString = String.format(Locale.ENGLISH,"%d %s %d mins", hours, hoursString, mins);
         }
 
         return timeString;
