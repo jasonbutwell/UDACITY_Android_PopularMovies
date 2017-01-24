@@ -7,6 +7,7 @@ import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by J on 21/01/2017.
@@ -19,15 +20,15 @@ import java.util.Date;
 
     // string literals to facilitate easier extracting of fields from the JSON data
 
-    static final String JSON_MOVIE_ID = "id";
-    static final String JSON_MOVIE_TITLE = "original_title";
-    static final String JSON_MOVIE_POSTER = "poster_path";
-    static final String JSON_MOVIE_BACKGROUND = "backdrop_path";
-    static final String JSON_MOVIE_OVERVIEW = "overview";
-    static final String JSON_MOVIE_RELEASEDATE = "release_date";
-    static final String JSON_MOVIE_ADULT = "adult";
-    static final String JSON_MOVIE_VOTES = "vote_average";
-    static final String JSON_MOVIE_DURATION = "duration";
+    static final String MOVIE_ID = "id";
+    static final String MOVIE_TITLE = "original_title";
+    static final String MOVIE_POSTER = "poster_path";
+    static final String MOVIE_BACKGROUND = "backdrop_path";
+    static final String MOVIE_OVERVIEW = "overview";
+    static final String MOVIE_RELEASEDATE = "release_date";
+    static final String MOVIE_ADULT = "adult";
+    static final String MOVIE_VOTES = "vote_average";
+    static final String MOVIE_DURATION = "duration";
 
     // For building the base URL and image URLs
 
@@ -68,7 +69,7 @@ import java.util.Date;
             else
                 hoursString = "hour";
 
-            timeString = String.format("%d %s %d mins", hours, hoursString, mins);
+            timeString = String.format(Locale.ENGLISH,"%d %s %d mins", hours, hoursString, mins);
         }
 
         return timeString;
@@ -77,8 +78,7 @@ import java.util.Date;
     // Formats the US date to a UK one
 
     static String USDateToUKDate( String dateToParse ) {
-        String formattedDate = formatDate("yyyy-MM-dd", dateToParse, "dd.MM.yyyy" );
-        return formattedDate;
+        return formatDate("yyyy-MM-dd", dateToParse, "dd.MM.yyyy" );
     }
 
     // Helper routine to help reformat dates
@@ -89,12 +89,12 @@ import java.util.Date;
 
         if ( dateFormat != null && dateToParse != null && dateOutputFormat != null ) {
             try {
-                date = new SimpleDateFormat(dateFormat).parse(dateToParse);
+                date = new SimpleDateFormat(dateFormat,Locale.getDefault()).parse(dateToParse);
             } catch (ParseException e) {
                 e.printStackTrace();
             }
 
-            formattedDate = new SimpleDateFormat(dateOutputFormat).format(date);
+            formattedDate = new SimpleDateFormat(dateOutputFormat, Locale.getDefault()).format(date);
         }
 
         return formattedDate;

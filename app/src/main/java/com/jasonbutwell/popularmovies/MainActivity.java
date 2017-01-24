@@ -38,20 +38,16 @@ public class MainActivity extends AppCompatActivity {
         loadingIndicator = (FrameLayout)findViewById(R.id.loadingIndicator);
 
         gridView.setAdapter(movieAdapter);
-        TMDBHelper.setSortByText(TMDBHelper.POPULAR);
 
         // Click Listener for the gridView
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                // Display a toast message for now. Will override with film details later.
-                //Toast.makeText(getApplicationContext(),"You clicked on item #"+String.valueOf(position),Toast.LENGTH_SHORT).show();
-
                 showMovieDetails( position );
             }
         });
 
-        loadMovieData();
+        loadMovieData(TMDBHelper.POPULAR);
     }
 
     // Set the loading indicator to be visible or invisible
@@ -70,26 +66,36 @@ public class MainActivity extends AppCompatActivity {
 
         Intent movieDetailsIntent = new Intent( getApplicationContext(), MovieDetails.class );
 
-        movieDetailsIntent.putExtra( TMDBHelper.JSON_MOVIE_ID, movies.get(position).getId());
-        movieDetailsIntent.putExtra( TMDBHelper.JSON_MOVIE_TITLE, movies.get(position).getOriginalTitle() );
-        movieDetailsIntent.putExtra( TMDBHelper.JSON_MOVIE_POSTER, movies.get(position).getPosterURL() );
-        movieDetailsIntent.putExtra( TMDBHelper.JSON_MOVIE_OVERVIEW, movies.get(position).getPlotSynopsis() );
-        movieDetailsIntent.putExtra( TMDBHelper.JSON_MOVIE_VOTES, movies.get(position).getUserRating() );
-        movieDetailsIntent.putExtra( TMDBHelper.JSON_MOVIE_RELEASEDATE, movies.get(position).getReleaseDate() );
+        movieDetailsIntent.putExtra( TMDBHelper.MOVIE_ID, movies.get(position).getId());
+        movieDetailsIntent.putExtra( TMDBHelper.MOVIE_TITLE, movies.get(position).getOriginalTitle() );
+        movieDetailsIntent.putExtra( TMDBHelper.MOVIE_POSTER, movies.get(position).getPosterURL() );
+        movieDetailsIntent.putExtra( TMDBHelper.MOVIE_OVERVIEW, movies.get(position).getPlotSynopsis() );
+        movieDetailsIntent.putExtra( TMDBHelper.MOVIE_VOTES, movies.get(position).getUserRating() );
+        movieDetailsIntent.putExtra( TMDBHelper.MOVIE_RELEASEDATE, movies.get(position).getReleaseDate() );
 
         startActivity(movieDetailsIntent);
     }
 
-    private void updateMovies(ArrayList<MovieItem> arrayList) {
-        movies = arrayList;
+    public void resetGridViewPosition() {
         // Scroll to first item in grid
         gridView.smoothScrollToPosition(0);
-        // reset the dataset for the adapter
+    }
+
+    private void updateMovies(ArrayList<MovieItem> arrayList) {
+        // Clear & rebuild the movie item array list
+        movies.clear();
+        movies.addAll(arrayList);
+
+        // reset the data set for the adapter
         movieAdapter.setData(movies);
     }
 
-    private void loadMovieData() {
-        new TMDBQueryTask().execute( TMDBHelper.buildBaseURL() );
+    private void loadMovieData( int sortByParam ) {
+
+        TMDBHelper.setSortByText( sortByParam );
+
+        new TMDBQueryTask().execute( TMDBHelper.buildBaseURL());
+        resetGridViewPosition();
     }
 
     // Create our options menu so we can filter the movies by
@@ -110,13 +116,11 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId() ) {
 
             case R.id.sortby_popular :
-                TMDBHelper.setSortByText(TMDBHelper.POPULAR);
-                loadMovieData();
+                loadMovieData(TMDBHelper.POPULAR);
                 return true;
 
             case R.id.sortby_top_rated :
-                TMDBHelper.setSortByText(TMDBHelper.TOP_RATED);
-                loadMovieData();
+                loadMovieData(TMDBHelper.TOP_RATED);
                 return true;
 
             default:
@@ -164,5 +168,4 @@ public class MainActivity extends AppCompatActivity {
             updateMovies(arrayList);
         }
     }
-
 }

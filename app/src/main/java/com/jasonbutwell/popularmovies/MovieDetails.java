@@ -42,12 +42,12 @@ public class MovieDetails extends AppCompatActivity {
 
         // Obtain the data passed with the intent as extras
 
-        String id = movieDetailsIntent.getStringExtra(TMDBHelper.JSON_MOVIE_ID);
-        String movieTitle = movieDetailsIntent.getStringExtra(TMDBHelper.JSON_MOVIE_TITLE);
-        String moviePoster = movieDetailsIntent.getStringExtra(TMDBHelper.JSON_MOVIE_POSTER);
-        String movieSynopsis = movieDetailsIntent.getStringExtra(TMDBHelper.JSON_MOVIE_OVERVIEW);
-        String movieRating = movieDetailsIntent.getStringExtra(TMDBHelper.JSON_MOVIE_VOTES);
-        String movieRelease = movieDetailsIntent.getStringExtra(TMDBHelper.JSON_MOVIE_RELEASEDATE);
+        String id = movieDetailsIntent.getStringExtra(TMDBHelper.MOVIE_ID);
+        String movieTitle = movieDetailsIntent.getStringExtra(TMDBHelper.MOVIE_TITLE);
+        String moviePoster = movieDetailsIntent.getStringExtra(TMDBHelper.MOVIE_POSTER);
+        String movieSynopsis = movieDetailsIntent.getStringExtra(TMDBHelper.MOVIE_OVERVIEW);
+        String movieRating = movieDetailsIntent.getStringExtra(TMDBHelper.MOVIE_VOTES);
+        String movieRelease = movieDetailsIntent.getStringExtra(TMDBHelper.MOVIE_RELEASEDATE);
 
         // show the movie title
         if ( movieTitle != null )
@@ -120,5 +120,4 @@ public class MovieDetails extends AppCompatActivity {
             movieDurationView.setText( TMDBHelper.convertToHoursMins( data ) );
         }
     }
-
 }

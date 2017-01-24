@@ -63,12 +63,12 @@ final class JSONUtils {
                 try {
                     if (movieItem != null) {
                         // extract the field strings needed
-                        id = movieItem.getString(TMDBHelper.JSON_MOVIE_ID);
-                        title = movieItem.getString( TMDBHelper.JSON_MOVIE_TITLE );
-                        posterURL = movieItem.getString( TMDBHelper.JSON_MOVIE_POSTER );
-                        synopsis = movieItem.getString( TMDBHelper.JSON_MOVIE_OVERVIEW );
-                        rating = movieItem.getString( TMDBHelper.JSON_MOVIE_VOTES );
-                        release = movieItem.getString( TMDBHelper.JSON_MOVIE_RELEASEDATE );
+                        id = movieItem.getString(TMDBHelper.MOVIE_ID);
+                        title = movieItem.getString( TMDBHelper.MOVIE_TITLE );
+                        posterURL = movieItem.getString( TMDBHelper.MOVIE_POSTER );
+                        synopsis = movieItem.getString( TMDBHelper.MOVIE_OVERVIEW );
+                        rating = movieItem.getString( TMDBHelper.MOVIE_VOTES );
+                        release = movieItem.getString( TMDBHelper.MOVIE_RELEASEDATE );
 
                         // DEBUG OUTPUT
 //                        Log.i("MOVIE id:",id);

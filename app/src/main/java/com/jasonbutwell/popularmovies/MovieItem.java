@@ -14,13 +14,6 @@ public class MovieItem {
     private String releaseDate;
     private String posterURL;
 
-    public MovieItem MovieItem() {
-        return this;
-    }
-
-    public MovieItem() {
-    }
-
     public String getId() {
         return id;
     }
