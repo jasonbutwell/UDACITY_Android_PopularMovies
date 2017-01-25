@@ -18,8 +18,10 @@ import java.util.Scanner;
 
 public final class NetworkUtils {
 
+    public static final String ERROR_MESSAGE = "No connection!";
+
     // Check to see if network connection is available
-    public boolean isNetworkAvailable(Context context) {
+    public static boolean isNetworkAvailable(Context context) {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();

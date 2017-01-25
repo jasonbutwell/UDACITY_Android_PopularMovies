@@ -8,8 +8,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.GridView;
+import android.widget.TextView;
 
 import java.io.IOException;
 import java.net.URL;
@@ -20,6 +22,11 @@ public class MainActivity extends AppCompatActivity {
     private GridView gridView;
     private MovieAdapter movieAdapter;
     private FrameLayout loadingIndicator;
+
+    private FrameLayout errorLayout;
+    private TextView errorMessageTV;
+
+    private Button retryButton;
 
     // This is where we will store our movies
     private ArrayList<MovieItem> movies = new ArrayList<>();
@@ -34,6 +41,10 @@ public class MainActivity extends AppCompatActivity {
 
         movieAdapter = new MovieAdapter(this, movies);
 
+        errorLayout = (FrameLayout) findViewById(R.id.errorMessage);
+        errorMessageTV = (TextView) findViewById(R.id.errorTextView);
+        retryButton = (Button) findViewById(R.id.retryButton);
+
         gridView = (GridView) findViewById(R.id.gridView);
         loadingIndicator = (FrameLayout)findViewById(R.id.loadingIndicator);
 
@@ -44,6 +55,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 showMovieDetails( position );
+            }
+        });
+
+        // Retry button listener
+        retryButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                loadMovieData(TMDBHelper.POPULAR);
             }
         });
 
@@ -60,8 +79,22 @@ public class MainActivity extends AppCompatActivity {
             loadingIndicator.setVisibility(View.INVISIBLE);
     }
 
-    // Pass the selected movie's details to the intent to show that information to the user.
+    // Set the error message and show it or hide it
+    private void showErrorMessage( boolean show, String errorMessage ) {
 
+        if ( show ) {
+            errorLayout.setVisibility(View.VISIBLE);
+
+            if ( errorMessage != null && !errorMessage.equals("") )
+                errorMessageTV.setText(errorMessage);
+            else
+                errorMessageTV.setText("");
+        }
+        else
+            errorLayout.setVisibility(View.INVISIBLE);
+    }
+
+    // Pass the selected movie's details to the intent to show that information to the user.
     private void showMovieDetails( int position ) {
 
         Intent movieDetailsIntent = new Intent( getApplicationContext(), MovieDetails.class );
@@ -76,11 +109,13 @@ public class MainActivity extends AppCompatActivity {
         startActivity(movieDetailsIntent);
     }
 
+    // Reset position of GridView
     public void resetGridViewPosition() {
         // Scroll to first item in grid
         gridView.smoothScrollToPosition(0);
     }
 
+    // update the movie list arraylist and then the adapter
     private void updateMovies(ArrayList<MovieItem> arrayList) {
         // Clear & rebuild the movie item array list
         movies.clear();
@@ -90,12 +125,26 @@ public class MainActivity extends AppCompatActivity {
         movieAdapter.setData(movies);
     }
 
+    // Check if we have a network connection
     private void loadMovieData( int sortByParam ) {
 
-        TMDBHelper.setSortByText( sortByParam );
+        if ( !NetworkUtils.isNetworkAvailable(getApplicationContext())) {
+            // if no network connection, show the error message and retry button
+            showErrorMessage(true, NetworkUtils.ERROR_MESSAGE);
+        }
+        else {
+            // clear and hide the error message
+            showErrorMessage(false, "");
 
-        new TMDBQueryTask().execute( TMDBHelper.buildBaseURL());
-        resetGridViewPosition();
+            // set to sort by selected parameter
+            TMDBHelper.setSortByText( sortByParam );
+
+            // create new query to download and extract the JSON data
+            new TMDBQueryTask().execute( TMDBHelper.buildBaseURL());
+
+            // reset the gridView
+            resetGridViewPosition();
+        }
     }
 
     // Create our options menu so we can filter the movies by

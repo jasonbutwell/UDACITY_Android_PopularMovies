@@ -19,7 +19,7 @@
         android:background="#00bc12"
         android:layout_centerHorizontal="true"
         android:layout_width="wrap_content"
-        android:layout_height="85dp"
+        android:layout_height="65dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentRight="true"
@@ -66,17 +66,18 @@
         android:layout_alignParentRight="true" />
 
     <ScrollView
-        android:layout_width="match_parent"
+        android:layout_toEndOf="@+id/moviePoster"
+        android:layout_width="295dp"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/moviePoster"
-        android:layout_alignLeft="@+id/moviePoster"
-        android:layout_alignStart="@+id/moviePoster"
-        android:paddingTop="15dp" >
+        android:layout_marginStart="15dp"
+        android:layout_marginLeft="15dp"
+        android:paddingTop="15dp"
+        android:layout_below="@id/movieTitle"
+        android:layout_toRightOf="@+id/moviePoster">
 
         <TextView
             android:id="@+id/movieDescription"
-            android:text=""
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
     </ScrollView>
