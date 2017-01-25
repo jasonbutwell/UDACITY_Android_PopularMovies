@@ -15,18 +15,20 @@ import java.net.URL;
 
 public class MovieDetails extends AppCompatActivity {
 
-    // References for our UI components
-    private TextView movieTitleView;
-    private ImageView moviePosterURLView;
-    private TextView movieSynopsisView;
-    private TextView movieRatingView;
-    private TextView movieReleaseView;
+    // References for movie duration UI component
     private TextView movieDurationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_details);
+
+        // References for our UI components
+        TextView movieTitleView;
+        ImageView moviePosterURLView;
+        TextView movieSynopsisView;
+        TextView movieRatingView;
+        TextView movieReleaseView;
 
         // obtain and store those UI references
         movieTitleView = (TextView)findViewById(R.id.movieTitle);

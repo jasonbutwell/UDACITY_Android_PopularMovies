@@ -19,14 +19,17 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
+    // IMPORTANT!
+    // Replace API KEY here or in APIKey.java with your own 'TMDB API KEY'
+
+    private final String YOUR_API_KEY = APIKey.get();
+
     private GridView gridView;
     private MovieAdapter movieAdapter;
     private FrameLayout loadingIndicator;
 
     private FrameLayout errorLayout;
     private TextView errorMessageTV;
-
-    private Button retryButton;
 
     // This is where we will store our movies
     private ArrayList<MovieItem> movies = new ArrayList<>();
@@ -36,14 +39,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Replace here or in APIKey.java with your own 'TMDB API KEY'
-        TMDBHelper.setApiKey( APIKey.get() );
+        TMDBHelper.setApiKey( YOUR_API_KEY );
 
         movieAdapter = new MovieAdapter(this, movies);
 
         errorLayout = (FrameLayout) findViewById(R.id.errorMessage);
         errorMessageTV = (TextView) findViewById(R.id.errorTextView);
-        retryButton = (Button) findViewById(R.id.retryButton);
+
+        Button retryButton = (Button) findViewById(R.id.retryButton);
 
         gridView = (GridView) findViewById(R.id.gridView);
         loadingIndicator = (FrameLayout)findViewById(R.id.loadingIndicator);
